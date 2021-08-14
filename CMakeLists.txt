@@ -16,8 +16,14 @@ set(ANTLR_EXECUTABLE ${CMAKE_CURRENT_SOURCE_DIR}/ext/antlr/bin/antlr-4.9.2-compl
 include(ExternalAntlr4Cpp)
 find_package(ANTLR REQUIRED)
 
+# JSON For C++
+add_subdirectory(ext/json)
+
 # Have antlr auto generate our CXX files from antl
 antlr_target(UnixqlGrammarParser Unixql.g4 OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/libs/)
+
+# Copy json files into build directory
+configure_file(commands.json commands.json COPYONLY)
 
 include(CTest)
 enable_testing()
@@ -28,6 +34,7 @@ add_executable(unixql
     src/main.cpp
     src/unixql_visitor.cpp
     src/executor.cpp
+    src/interceptor.cpp
     ${ANTLR_UnixqlGrammarParser_CXX_OUTPUTS}
 )
 
@@ -37,7 +44,7 @@ target_include_directories(unixql PRIVATE include)
 target_include_directories(unixql PRIVATE libs)
 
 # Add any libraries we need
-target_link_libraries(unixql antlr4_static ${SYSTEM_LIBS})
+target_link_libraries(unixql antlr4_static nlohmann_json::nlohmann_json ${SYSTEM_LIBS})
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

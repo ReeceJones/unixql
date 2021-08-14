@@ -1,0 +1,7 @@
+{
+    "ls.*": {
+        "name": "ls",
+        "expanded": ["ls", "-la"],
+        "parser": "ls_parser"
+    }
+}

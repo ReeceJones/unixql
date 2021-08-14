@@ -4,8 +4,10 @@
 #include "antlr4-runtime.h"
 #include "UnixqlLexer.h"
 #include "unixql_visitor.h"
+#include "interceptor.h"
 
 int main(int argc, char* argv[]) {
+    Interceptor::loadCommands("commands.json");
     // std::ifstream test;
     // test.open(argv[1], std::ifstream::in);
     std::string test;

@@ -1,5 +1,3 @@
-#pragma once
-
 #include "unixql_visitor.h"
 
 antlrcpp::Any UnixQLVisitor::visitProgram(UnixqlParser::ProgramContext* context) {
