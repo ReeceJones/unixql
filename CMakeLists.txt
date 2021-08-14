@@ -20,7 +20,8 @@ find_package(ANTLR REQUIRED)
 add_subdirectory(ext/json)
 
 # Have antlr auto generate our CXX files from antl
-antlr_target(UnixqlGrammarParser Unixql.g4 OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/libs/)
+antlr_target(UnixqlGrammarParser parsers/Unixql.g4 OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/libs/parsers)
+antlr_target(LsGrammarParser parsers/Ls.g4 OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/libs/parsers)
 
 # Copy json files into build directory
 configure_file(commands.json commands.json COPYONLY)
@@ -29,19 +30,20 @@ include(CTest)
 enable_testing()
 
 # Add our executable
-
 add_executable(unixql 
     src/main.cpp
     src/unixql_visitor.cpp
     src/executor.cpp
     src/interceptor.cpp
+    src/parsers.cpp
     ${ANTLR_UnixqlGrammarParser_CXX_OUTPUTS}
+    ${ANTLR_LsGrammarParser_CXX_OUTPUTS}
 )
 
 # Add any include directories
 target_include_directories(unixql PRIVATE ${ANTLR4_INCLUDE_DIRS})
 target_include_directories(unixql PRIVATE include)
-target_include_directories(unixql PRIVATE libs)
+target_include_directories(unixql PRIVATE libs/parsers)
 
 # Add any libraries we need
 target_link_libraries(unixql antlr4_static nlohmann_json::nlohmann_json ${SYSTEM_LIBS})

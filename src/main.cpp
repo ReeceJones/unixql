@@ -5,11 +5,14 @@
 #include "UnixqlLexer.h"
 #include "unixql_visitor.h"
 #include "interceptor.h"
+#include "parsers.h"
 
 int main(int argc, char* argv[]) {
+    // load our commands.json file
     Interceptor::loadCommands("commands.json");
-    // std::ifstream test;
-    // test.open(argv[1], std::ifstream::in);
+    // load our parsers
+    Parsers::loadParsers();
+
     std::string test;
     getline(std::cin, test);
     antlr4::ANTLRInputStream input(test);
