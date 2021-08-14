@@ -2,13 +2,16 @@
 
 namespace Executor {
     void executeProgram(std::vector<std::string> columns, std::string table) {
-        auto args = Interceptor::interceptTable(table);
+        auto intercept = Interceptor::interceptTable(table);
+        std::optional<std::vector<std::string>> args;
+        std::optional<Parsers::ParserFn> parser;
+        std::tie(args, parser) = intercept;
         if (args.has_value()) {
             execute(args.value());
         }
         else {
-            std::vector args { table };
-            execute(args);
+            std::vector targs { table };
+            execute(targs);
         }
     }
 

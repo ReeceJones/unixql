@@ -12,10 +12,10 @@ namespace Interceptor {
         std::cout << "Loaded commands file: " << file_path << std::endl;
     }
 
-    std::optional<std::vector<std::string>> interceptTable(std::string table) {
+    std::tuple<std::optional<std::vector<std::string>>, std::optional<Parsers::ParserFn>> interceptTable(std::string table) {
         if (commands.empty()) {
             std::cerr << "Commands json file not loaded! Cannot execute command until this is fixed." << std::endl;
-            return std::nullopt;
+            return std::make_tuple(std::nullopt, std::nullopt);
         }
 
         // iterate through command objects to file math
@@ -28,10 +28,12 @@ namespace Interceptor {
                 for (auto arg : obj.value()["expanded"]) {
                     args.push_back(arg.get<std::string>());
                 }
-                return args;
+                // load the parser
+                std::optional<Parsers::ParserFn> parser = Parsers::resolveParser(obj.value()["parser"].get<std::string>());
+                return std::make_tuple(std::make_optional(args), parser);
             }
         }
 
-        return std::nullopt;
+        return std::make_tuple(std::nullopt, std::nullopt);
     }
 }
