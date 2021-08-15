@@ -21,7 +21,7 @@ add_subdirectory(ext/json)
 
 # Have antlr auto generate our CXX files from antl
 antlr_target(UnixqlGrammarParser Unixql.g4 OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/libs)
-antlr_target(LsGrammarParser Ls.g4 OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/libs)
+antlr_target(OutputGrammarParser Output.g4 OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/libs)
 
 # Copy json files into build directory
 configure_file(commands.json commands.json COPYONLY)
@@ -37,7 +37,7 @@ add_executable(unixql
     src/interceptor.cpp
     src/parsers.cpp
     ${ANTLR_UnixqlGrammarParser_CXX_OUTPUTS}
-    ${ANTLR_LsGrammarParser_CXX_OUTPUTS}
+    ${ANTLR_OutputGrammarParser_CXX_OUTPUTS}
 )
 
 # Add any include directories
