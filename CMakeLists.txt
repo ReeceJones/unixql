@@ -36,6 +36,7 @@ add_executable(unixql
     src/executor.cpp
     src/interceptor.cpp
     src/parsers.cpp
+    src/db.cpp
     ${ANTLR_UnixqlGrammarParser_CXX_OUTPUTS}
     ${ANTLR_OutputGrammarParser_CXX_OUTPUTS}
 )

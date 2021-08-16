@@ -18,7 +18,8 @@ namespace Executor {
 
         // parse the output
         if (parser.has_value()) {
-            parser.value()(output);
+            auto table = parser.value()(output);
+            table->print();
         }
     }
 

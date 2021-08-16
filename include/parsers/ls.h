@@ -4,24 +4,35 @@
 #include <vector>
 #include <tuple>
 #include <any>
+#include <memory>
 #include "OutputParser.h"
 #include "OutputLexer.h"
 #include "antlr4-runtime.h"
+#include "db.h"
 
 namespace Parsers::Ls {
-    typedef std::tuple<std::string, std::any> Column;
-    typedef std::vector<Column> Columns;
-
     class  LsParserVisitor : public antlr4::tree::AbstractParseTreeVisitor {
     public:
         antlrcpp::Any visitOutput(OutputParser::LsContext *context) {
-            std::vector<Columns> lines;
+            // Modern c++ has cool features, too bad c++20 support sucks
+            std::vector<std::string> column_names{
+                "mode",
+                "number_links",
+                "user",
+                "group",
+                "size",
+                "month",
+                "day",
+                "time",
+                "path"
+            };
+            auto table = std::make_shared<DB::Table>("LS", column_names);
 
             for (auto line : context->entries) {
-                lines.push_back(visitLine(line).as<Columns>());
+                table->push_back(visitLine(line).as<DB::Table::Row>());
             }
 
-            return lines;
+            return table;
         }
 
         antlrcpp::Any visitLine(OutputParser::LineContext* context) {
@@ -30,21 +41,22 @@ namespace Parsers::Ls {
                 path += p->getText() + " ";
             }
             path.pop_back();
-            Columns columns = {
-                Column("mode", context->file_mode()->getText()),
-                Column("number_links", context->number_links()->getText()),
-                Column("user", context->user()->getText()),
-                Column("group", context->group()->getText()),
-                Column("size", context->size()->getText()),
-                Column("month", context->month()->getText()),
-                Column("time", context->time()->getText()),
-                Column("path", path)
+            DB::Table::Row row = {
+                {"mode", context->file_mode()->getText()},
+                {"number_links", context->number_links()->getText()},
+                {"user", context->user()->getText()},
+                {"group", context->group()->getText()},
+                {"size", context->size()->getText()},
+                {"month", context->month()->getText()},
+                {"day", context->day()->getText()},
+                {"time", context->time()->getText()},
+                {"path", path}
             };
-            return columns;
+            return row;
         }
     };
 
-    inline void parseLs(std::string output) {
+    inline std::shared_ptr<DB::Table> parseLs(std::string output) {
         antlr4::ANTLRInputStream input(output);
         OutputLexer lexer(&input);
         antlr4::CommonTokenStream tokens(&lexer);
@@ -52,6 +64,6 @@ namespace Parsers::Ls {
 
         OutputParser::LsContext* tree = parser.ls();
         LsParserVisitor visitor;
-        visitor.visitOutput(tree);
+        return visitor.visitOutput(tree).as<std::shared_ptr<DB::Table>>();
     }
 }
