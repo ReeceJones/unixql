@@ -17,6 +17,10 @@ antlrcpp::Any UnixQLVisitor::visitProgram(UnixqlParser::ProgramContext* context)
 }
 
 antlrcpp::Any UnixQLVisitor::visitColumns(UnixqlParser::ColumnsContext* context) {
+    if (context->ALL()) {
+        return std::vector<std::string>{};
+    }
+
     std::vector<std::string> columns;
     for (auto column : context->column_selection) {
         columns.push_back(column->VARIABLE()->getText());

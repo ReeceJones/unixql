@@ -19,7 +19,7 @@ namespace Executor {
 
         // parse the output
         if (parser.has_value()) {
-            auto table = parser.value()(output);
+            auto table = parser.value()(output).select(columns);
             // subset table
             for (auto condition : conditions) {
                 auto filter = [=](DB::Table::Row row) {
@@ -28,7 +28,7 @@ namespace Executor {
                         return condition.second.compare(elem->second) == 0;
                     }
                     else {
-                        std::cerr << "Table has no column " << condition.first << std::endl;
+                        std::cerr << "Table chas no column " << condition.first << std::endl;
                     }
                     return false;
                 };

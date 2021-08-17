@@ -26,8 +26,12 @@ namespace DB {
         this->rows.push_back(row);
     }
 
-    Table Table::select() {
-        return Table(this->name, this->column_names, this->rows);
+    Table Table::select(std::vector<std::string> columns) {
+        // we don't remove unused columns from rows because they may be used in a query later!
+        if (columns.empty()) {
+            return Table(this->name, this->column_names, this->rows);
+        }
+        return Table(this->name, columns, this->rows);
     }
 
     Table Table::where(std::function<bool( Row )> filter) {
@@ -101,6 +105,11 @@ namespace DB {
         for (auto row : this->rows) {
             ss << "|";
             for (auto elem : row) {
+                // don't include columns not in column_names
+                if (std::find(headers.begin(), headers.end(), elem.first) == headers.end()) {
+                    continue;
+                }
+
                 ss << " " << elem.second;
                 for (int i = 0; i < column_widths[elem.first] - elem.second.size(); i++) {
                     ss << " ";

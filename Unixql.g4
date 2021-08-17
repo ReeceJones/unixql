@@ -3,7 +3,7 @@ grammar Unixql;
 program : SELECT columns FROM table where? ';';
 
 column : VARIABLE | VARIABLE ',';
-columns : column_selection+=column+;
+columns : ALL | column_selection+=column+;
 table : VARIABLE;
 where : WHERE condition;
 condition : VARIABLE '=' STRING;
@@ -11,6 +11,7 @@ condition : VARIABLE '=' STRING;
 SELECT : 'select';
 FROM : 'from';
 WHERE : 'where';
+ALL : '*';
 VARIABLE : [A-Za-z_][A-Za-z0-9_]*;
 STRING : '\'' .*? '\'' ;
 WS : [ \t] -> skip;

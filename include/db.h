@@ -2,10 +2,10 @@
 
 #include <iostream>
 #include <vector>
+#include <map>
 #include <string>
 #include <sstream>
 #include <any>
-#include <map>
 #include <algorithm>
 
 namespace DB {
@@ -17,7 +17,7 @@ namespace DB {
         Table(std::string name, std::vector<std::string> column_names, std::vector<Row> rows);
         void push_back(Row row);
         
-        Table select();
+        Table select(std::vector<std::string> columns);
         Table where(std::function<bool( Row )> filter);
 
         std::string toString();
