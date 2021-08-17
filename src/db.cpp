@@ -7,6 +7,12 @@ namespace DB {
         this->rows = {};
     }
 
+    Table::Table(std::string name, std::vector<std::string> column_names, std::vector<Row> rows) {
+        this->name = name;
+        this->column_names = column_names;
+        this->rows = rows;
+    }
+
     void Table::push_back(Row row) {
         // validate row
         for (auto itr : row) {
@@ -18,6 +24,21 @@ namespace DB {
         }
 
         this->rows.push_back(row);
+    }
+
+    Table Table::select() {
+        return Table(this->name, this->column_names, this->rows);
+    }
+
+    Table Table::where(std::function<bool( Row )> filter) {
+        std::vector<Row> selected_rows;
+        for (auto row : this->rows) {
+            if (filter(row)) {
+                selected_rows.push_back(row);
+            }
+        }
+
+        return Table(this->name, this->column_names, selected_rows);
     }
 
     std::string Table::toString() {

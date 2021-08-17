@@ -12,4 +12,5 @@ public:
     antlrcpp::Any visitProgram(UnixqlParser::ProgramContext *context);
     antlrcpp::Any visitColumns(UnixqlParser::ColumnsContext* context);
     antlrcpp::Any visitTable(UnixqlParser::TableContext* context);
+    antlrcpp::Any visitWhere(UnixqlParser::WhereContext* context);
 };

@@ -8,7 +8,7 @@
 #include "parsers/ls.h"
 
 namespace Parsers {
-    typedef std::shared_ptr<DB::Table> (*ParserFn)(std::string input);
+    typedef DB::Table (*ParserFn)(std::string input);
     extern std::map<std::string, ParserFn> parsers;
 
     void loadParsers();

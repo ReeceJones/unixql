@@ -26,10 +26,10 @@ namespace Parsers::Ls {
                 "time",
                 "path"
             };
-            auto table = std::make_shared<DB::Table>("LS", column_names);
+            auto table = DB::Table("ls", column_names);
 
             for (auto line : context->entries) {
-                table->push_back(visitLine(line).as<DB::Table::Row>());
+                table.push_back(visitLine(line).as<DB::Table::Row>());
             }
 
             return table;
@@ -56,7 +56,7 @@ namespace Parsers::Ls {
         }
     };
 
-    inline std::shared_ptr<DB::Table> parseLs(std::string output) {
+    inline DB::Table parseLs(std::string output) {
         antlr4::ANTLRInputStream input(output);
         OutputLexer lexer(&input);
         antlr4::CommonTokenStream tokens(&lexer);
@@ -64,6 +64,6 @@ namespace Parsers::Ls {
 
         OutputParser::LsContext* tree = parser.ls();
         LsParserVisitor visitor;
-        return visitor.visitOutput(tree).as<std::shared_ptr<DB::Table>>();
+        return visitor.visitOutput(tree).as<DB::Table>();
     }
 }

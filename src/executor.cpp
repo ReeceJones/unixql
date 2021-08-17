@@ -1,7 +1,7 @@
 #include "executor.h"
 
 namespace Executor {
-    void executeProgram(std::vector<std::string> columns, std::string table) {
+    void executeProgram(std::vector<std::string> columns, std::string table, std::vector<std::pair<std::string,std::string>> conditions) {
         auto intercept = Interceptor::interceptTable(table);
         std::optional<std::vector<std::string>> args;
         std::optional<Parsers::ParserFn> parser;
@@ -20,7 +20,21 @@ namespace Executor {
         // parse the output
         if (parser.has_value()) {
             auto table = parser.value()(output);
-            table->print();
+            // subset table
+            for (auto condition : conditions) {
+                auto filter = [=](DB::Table::Row row) {
+                    auto elem = row.find(condition.first);
+                    if (elem != row.end()) {
+                        return condition.second.compare(elem->second) == 0;
+                    }
+                    else {
+                        std::cerr << "Table has no column " << condition.first << std::endl;
+                    }
+                    return false;
+                };
+                table = table.where(filter);
+            }
+            table.print();
         }
 
         auto end = std::chrono::system_clock::now();
