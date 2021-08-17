@@ -8,6 +8,15 @@ namespace DB {
     }
 
     void Table::push_back(Row row) {
+        // validate row
+        for (auto itr : row) {
+            if (std::find(this->column_names.begin(), this->column_names.end(), itr.first) == this->column_names.end()
+                && this->column_names.size() > 0) {
+                std::cerr << "Column " << itr.first << " does not exist in table" << std::endl;
+                return;
+            }
+        }
+
         this->rows.push_back(row);
     }
 

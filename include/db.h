@@ -6,6 +6,7 @@
 #include <sstream>
 #include <any>
 #include <map>
+#include <algorithm>
 
 namespace DB {
     class Table
