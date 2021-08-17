@@ -13,8 +13,8 @@ namespace Executor {
             output = execute(args.value());
         }
         else {
-            std::vector targs { table };
-            output = execute(targs);
+            std::vector vargs { table };
+            output = execute(vargs);
         }
 
         // parse the output
