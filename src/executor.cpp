@@ -8,6 +8,7 @@ namespace Executor {
         std::tie(args, parser) = intercept;
 
         std::string output;
+        auto start = std::chrono::system_clock::now();
         if (args.has_value()) {
             output = execute(args.value());
         }
@@ -21,6 +22,10 @@ namespace Executor {
             auto table = parser.value()(output);
             table->print();
         }
+
+        auto end = std::chrono::system_clock::now();
+        auto diff = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        std::cout << "Query took " << (double)diff.count() / 1000.0 << "ms" << std::endl;
     }
 
     std::string execute(std::vector<std::string> args) {

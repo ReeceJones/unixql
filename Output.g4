@@ -12,6 +12,6 @@ day : ANYCOL;
 month : ANYCOL;
 time : ANYCOL;
 
-ANYCOL : '"' .+? [^\\]["] | [A-Za-z0-9\-:._]+;
+ANYCOL : '"' .*? [^\\]["] | [A-Za-z0-9\-:._()]+;
 CRLF : '\r'? '\n';
 WS : ' ' -> skip;
