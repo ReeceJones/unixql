@@ -25,7 +25,7 @@ namespace Executor {
                 auto filter = [=](DB::Table::Row row) {
                     auto elem = row.find(condition.first);
                     if (elem != row.end()) {
-                        return condition.second.compare(elem->second) == 0;
+                        return condition.second.compare(std::any_cast<std::string>(elem->second)) == 0;
                     }
                     else {
                         std::cerr << "Table chas no column " << condition.first << std::endl;

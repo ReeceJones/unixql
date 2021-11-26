@@ -59,7 +59,7 @@ namespace DB {
         }
         for (auto row : this->rows) {
             for (auto elem : row) {
-                auto len = elem.second.size();
+                auto len = std::any_cast<std::string>(elem.second).size();
                 if (len > column_widths[elem.first]) {
                     column_widths[elem.first] = (int)len;
                 }
@@ -110,8 +110,8 @@ namespace DB {
                     continue;
                 }
 
-                ss << " " << elem.second;
-                for (int i = 0; i < column_widths[elem.first] - elem.second.size(); i++) {
+                ss << " " << std::any_cast<std::string>(elem.second);
+                for (int i = 0; i < column_widths[elem.first] - std::any_cast<std::string>(elem.second).size(); i++) {
                     ss << " ";
                 }
                 ss << " |";

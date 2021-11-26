@@ -12,7 +12,7 @@ namespace DB {
     class Table
     {
     public:
-        typedef std::map<std::string, std::string> Row;
+        typedef std::map<std::string, std::any> Row;
         Table(std::string name, std::vector<std::string> column_names);
         Table(std::string name, std::vector<std::string> column_names, std::vector<Row> rows);
         void push_back(Row row);
